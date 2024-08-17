@@ -1,3 +1,4 @@
+import factory
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -7,6 +8,16 @@ from sqlalchemy.pool import StaticPool
 from madr.app import app
 from madr.database import get_session
 from madr.models import Conta, table_registry
+from madr.security import get_password_hash
+
+
+class ContaFactory(factory.Factory):
+    class Meta:
+        Conta
+
+    username = factory.Sequence(lambda n: f'test{n}')
+    email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com')
+    senha = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com')
 
 
 @pytest.fixture
@@ -37,7 +48,7 @@ def session():
 @pytest.fixture
 def user(session):
     pwd = 'testtest'
-    conta = Conta(username='Teste', email='teste@test.com', senha=pwd)
+    conta = Conta(username='Teste', email='teste@test.com', senha=get_password_hash(pwd))
     session.add(conta)
     session.commit()
     session.refresh(conta)
@@ -45,3 +56,25 @@ def user(session):
     conta.clean_password = pwd
 
     return conta
+
+
+@pytest.fixture
+def other_user(session):
+    pwd = 'testtest'
+
+    user = ContaFactory(password=get_password_hash(pwd))
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    user.clean_password = pwd
+
+    return user
+
+
+@pytest.fixture
+def token(client, user):
+    response = client.post(
+        '/auth/token', data={'username': user.email, 'password': user.clean_password}
+    )
+    return response.json()['access_token']

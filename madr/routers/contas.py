@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from madr.database import get_session
 from madr.models import Conta
 from madr.schemas import ContaPublic, ContaSchema
+from madr.security import get_password_hash
 
 router = APIRouter(prefix='/conta', tags=['conta'])
 T_Session = Annotated[Session, Depends(get_session)]
@@ -22,7 +23,9 @@ def create_conta(conta: ContaSchema, session: T_Session):
     if db_conta:
         raise HTTPException(status_code=HTTPStatus.CONFLICT, detail='conta já consta no MADR')
 
-    db_conta = Conta(username=conta.username, email=conta.email, senha=conta.senha)
+    db_conta = Conta(
+        username=conta.username, email=conta.email, senha=get_password_hash(conta.senha)
+    )
     session.add(db_conta)
     session.commit()
     session.refresh(db_conta)
