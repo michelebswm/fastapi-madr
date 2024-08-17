@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from jwt import decode
 
 from madr.security import create_access_token
@@ -12,3 +14,12 @@ def test_jwt():
 
     assert result['sub'] == data['sub']
     assert result['exp']
+
+
+def test_jwt_invalid_token(client, user, token):
+    response = client.delete(
+        f'/conta/{user.id}', headers={'Authorization': 'Bearer tokeN-invalido'}
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Could not validate credentials'}
