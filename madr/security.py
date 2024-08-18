@@ -9,7 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from madr.database import get_session
-from madr.models import Conta
+from madr.models import User
 from madr.settings import Settings
 
 pwd_context = PasswordHash.recommended()
@@ -49,7 +49,7 @@ def get_current_user(session: Session = Depends(get_session), token: str = Depen
     except ExpiredSignatureError:
         raise credentials_exception
 
-    user = session.scalar(select(Conta).where(Conta.email == username))
+    user = session.scalar(select(User).where(User.email == username))
 
     if not user:
         raise credentials_exception

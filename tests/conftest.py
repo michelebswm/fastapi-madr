@@ -7,13 +7,13 @@ from sqlalchemy.pool import StaticPool
 
 from madr.app import app
 from madr.database import get_session
-from madr.models import Conta, table_registry
+from madr.models import User, table_registry
 from madr.security import get_password_hash
 
 
-class ContaFactory(factory.Factory):
+class UserFactory(factory.Factory):
     class Meta:
-        Conta
+        User
 
     username = factory.Sequence(lambda n: f'test{n}')
     email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com')
@@ -48,21 +48,21 @@ def session():
 @pytest.fixture
 def user(session):
     pwd = 'testtest'
-    conta = Conta(username='Teste', email='teste@test.com', senha=get_password_hash(pwd))
-    session.add(conta)
+    user = User(username='Teste', email='teste@test.com', senha=get_password_hash(pwd))
+    session.add(user)
     session.commit()
-    session.refresh(conta)
+    session.refresh(user)
 
-    conta.clean_password = pwd
+    user.clean_password = pwd
 
-    return conta
+    return user
 
 
 @pytest.fixture
 def other_user(session):
     pwd = 'testtest'
 
-    user = ContaFactory(password=get_password_hash(pwd))
+    user = UserFactory(password=get_password_hash(pwd))
     session.add(user)
     session.commit()
     session.refresh(user)

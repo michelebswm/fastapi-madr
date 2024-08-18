@@ -5,13 +5,13 @@ class Message(BaseModel):
     message: str
 
 
-class ContaSchema(BaseModel):
+class UserSchema(BaseModel):
     username: str
     email: EmailStr
     senha: str
 
 
-class ContaPublic(BaseModel):
+class UserPublic(BaseModel):
     id: int
     username: str
     email: EmailStr

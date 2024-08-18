@@ -5,13 +5,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from madr.database import get_session
-from madr.models import Conta, Romancista
+from madr.models import Romancista, User
 from madr.schemas import RomancistaPublic, RomancistaSchema
 from madr.security import get_current_user
 
 router = APIRouter(prefix='/romancista', tags=['romancista'])
 T_Session = Annotated[Session, Depends(get_session)]
-T_CurrentUser = Annotated[Conta, Depends(get_current_user)]
+T_CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.post('', status_code=HTTPStatus.CREATED, response_model=RomancistaPublic)

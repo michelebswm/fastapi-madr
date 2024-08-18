@@ -5,13 +5,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from madr.database import get_session
-from madr.models import Conta, Livro
+from madr.models import Livro, User
 from madr.schemas import LivroPublic, LivroSchema
 from madr.security import get_current_user
 
 router = APIRouter(prefix='/livro', tags=['livro'])
 T_Session = Annotated[Session, Depends(get_session)]
-T_CurrentUser = Annotated[Conta, Depends(get_current_user)]
+T_CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.post('', status_code=HTTPStatus.CREATED, response_model=LivroPublic)

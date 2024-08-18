@@ -1,12 +1,12 @@
 from sqlalchemy import select
 
-from madr.models import Conta
+from madr.models import User
 
 
-def test_create_conta_db(session):
-    conta = Conta(username='Michele', email='mi@teste.com', senha='12345')
-    session.add(conta)
+def test_create_user_db(session):
+    user = User(username='Michele', email='mi@teste.com', senha='12345')
+    session.add(user)
     session.commit()
 
-    result = session.scalar(select(Conta).where(Conta.email == conta.email))
-    assert result.username == conta.username
+    result = session.scalar(select(User).where(User.email == user.email))
+    assert result.username == user.username
