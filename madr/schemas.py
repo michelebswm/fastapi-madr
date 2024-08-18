@@ -21,3 +21,21 @@ class ContaPublic(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str = 'bearer'
+
+
+class LivroSchema(BaseModel):
+    ano: int
+    titulo: str
+    romancista_id: int
+
+
+class LivroPublic(LivroSchema):
+    id: int
+
+
+class RomancistaSchema(BaseModel):
+    nome: str
+
+
+class RomancistaPublic(RomancistaSchema):
+    id: int
