@@ -7,17 +7,33 @@ from sqlalchemy.pool import StaticPool
 
 from madr.app import app
 from madr.database import get_session
-from madr.models import User, table_registry
+from madr.models import Livro, Romancista, User, table_registry
 from madr.security import get_password_hash
 
 
 class UserFactory(factory.Factory):
     class Meta:
-        User
+        model = User
 
     username = factory.Sequence(lambda n: f'test{n}')
     email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com')
     senha = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com')
+
+
+class RomancistaFactory(factory.Factory):
+    class Meta:
+        model = Romancista
+
+    nome = factory.Faker('text')
+
+
+class LivroFactory(factory.Factory):
+    class Meta:
+        model = Livro
+
+    ano = factory.Faker('random_int', min=1900, max=2024)
+    titulo = factory.Faker('text')
+    romancista_id = 1
 
 
 @pytest.fixture

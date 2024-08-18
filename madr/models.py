@@ -18,7 +18,7 @@ class User:
 class Romancista:
     __tablename__ = 'romancistas'
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
-    nome: Mapped[str]
+    nome: Mapped[str] = mapped_column(unique=True)
 
     livros: Mapped[list['Livro']] = relationship(
         init=False, back_populates='romancista', cascade='all, delete-orphan'
@@ -31,7 +31,7 @@ class Livro:
 
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     ano: Mapped[int]
-    titulo: Mapped[str]
+    titulo: Mapped[str] = mapped_column(unique=True)
 
     romancista_id: Mapped[int] = mapped_column(ForeignKey('romancistas.id'))
 

@@ -1,8 +1,8 @@
 """create tables user romancista livro
 
-Revision ID: c90112871406
+Revision ID: 1f7f57f6f110
 Revises: 
-Create Date: 2024-08-18 11:47:22.304924
+Create Date: 2024-08-18 12:34:28.258222
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'c90112871406'
+revision: str = '1f7f57f6f110'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,7 +23,8 @@ def upgrade() -> None:
     op.create_table('romancistas',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nome', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('nome')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -40,7 +41,8 @@ def upgrade() -> None:
     sa.Column('titulo', sa.String(), nullable=False),
     sa.Column('romancista_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['romancista_id'], ['romancistas.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('titulo')
     )
     # ### end Alembic commands ###
 
