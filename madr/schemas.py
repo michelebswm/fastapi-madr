@@ -39,6 +39,10 @@ class LivroUpdate(BaseModel):
     romancista_id: int | None = None
 
 
+class LivroList(BaseModel):
+    livros: list[LivroPublic]
+
+
 class RomancistaSchema(BaseModel):
     nome: str
 

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from madr.database import get_session
 from madr.models import Livro, User
-from madr.schemas import LivroPublic, LivroSchema, LivroUpdate, Message
+from madr.schemas import LivroList, LivroPublic, LivroSchema, LivroUpdate, Message
 from madr.security import get_current_user
 from madr.utils import sanitization_data
 
@@ -69,3 +69,34 @@ def patch_livro(id: int, session: T_Session, current_user: T_CurrentUser, livro:
     session.refresh(db_livro)
 
     return db_livro
+
+
+@router.get('/{id}', status_code=HTTPStatus.OK, response_model=LivroPublic)
+def find_livro(id: int, session: T_Session, current_user: T_CurrentUser):
+    db_livro = session.scalar(select(Livro).where(Livro.id == id))
+    if not db_livro:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='Livro não consta no MADR')
+
+    return db_livro
+
+
+@router.get('', status_code=HTTPStatus.OK, response_model=LivroList)
+def list_livros(  # noqa
+    session: T_Session,
+    current_user: T_CurrentUser,
+    ano: int | None = None,
+    titulo: str | None = None,
+    offset: int | None = None,
+    limit: int | None = 20,
+):
+    query = select(Livro)
+
+    if ano:
+        query = query.where(Livro.ano == ano)
+
+    if titulo:
+        query = query.where(Livro.titulo.contains(titulo))
+
+    livros = session.scalars(query.offset(offset).limit(limit)).all()
+
+    return {'livros': livros}

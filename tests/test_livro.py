@@ -114,3 +114,61 @@ def test_patch_livro_conflict(session, client, token):
 
     assert response.status_code == HTTPStatus.CONFLICT
     assert response.json() == {'detail': 'Livro á consta no MADR'}
+
+
+def test_get_livro_by_id_ok(session, client, token):
+    session.bulk_save_objects(LivroFactory.build_batch(1))
+    session.commit()
+
+    response = client.get('/livro/1', headers={'Authorization': f'Bearer {token}'})
+
+    assert response.status_code == HTTPStatus.OK
+
+
+def test_get_livro_by_id_not_found(session, client, token):
+    session.bulk_save_objects(LivroFactory.build_batch(1))
+    session.commit()
+
+    response = client.get('/livro/2', headers={'Authorization': f'Bearer {token}'})
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'Livro não consta no MADR'}
+
+
+def test_list_livro_filter_ano_return_5(session, client, token):
+    expected_livros = 5
+    session.bulk_save_objects(LivroFactory.build_batch(5, ano=2024))
+    session.commit()
+
+    response = client.get('/livro?ano=2024', headers={'Authorization': f'Bearer {token}'})
+    assert response.status_code == HTTPStatus.OK
+    assert len(response.json()['livros']) == expected_livros
+
+
+def test_list_livro_filter_titulo_return_5(session, client, token):
+    expected_livros = 5
+    session.bulk_save_objects(LivroFactory.build_batch(5))
+    session.commit()
+
+    response = client.get('/livro?titulo=a', headers={'Authorization': f'Bearer {token}'})
+    assert response.status_code == HTTPStatus.OK
+    assert len(response.json()['livros']) == expected_livros
+
+
+def test_list_livro_filter_combined_return_5(session, client, token):
+    expected_livros = 5
+    session.bulk_save_objects(LivroFactory.build_batch(5, ano=2024))
+    session.commit()
+
+    response = client.get('/livro?ano=2024&titulo=a', headers={'Authorization': f'Bearer {token}'})
+
+    assert response.status_code == HTTPStatus.OK
+    assert len(response.json()['livros']) == expected_livros
+
+
+def test_list_livro_return_empty(session, client, token):
+    expected_livros = 0
+    response = client.get('/livro?ano=2024', headers={'Authorization': f'Bearer {token}'})
+
+    assert response.status_code == HTTPStatus.OK
+    assert len(response.json()['livros']) == expected_livros
