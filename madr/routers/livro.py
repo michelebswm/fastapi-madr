@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from madr.database import get_session
-from madr.models import Livro, User
+from madr.models import Livro, Romancista, User
 from madr.schemas import LivroList, LivroPublic, LivroSchema, LivroUpdate, Message
 from madr.security import get_current_user
 from madr.utils import sanitization_data
@@ -19,8 +19,15 @@ T_CurrentUser = Annotated[User, Depends(get_current_user)]
 @router.post('', status_code=HTTPStatus.CREATED, response_model=LivroPublic)
 def create_livro(livro: LivroSchema, session: T_Session, current_user: T_CurrentUser):
     db_livro = session.scalar(select(Livro).where(Livro.titulo == sanitization_data(livro.titulo)))
+    db_romancista = session.scalar(select(Romancista).where(Romancista.id == livro.romancista_id))
+
     if db_livro:
         raise HTTPException(status_code=HTTPStatus.CONFLICT, detail='Livro á consta no MADR')
+
+    if not db_romancista:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='Romancista não consta no MADR'
+        )
 
     db_livro = Livro(
         ano=livro.ano, titulo=sanitization_data(livro.titulo), romancista_id=livro.romancista_id
@@ -61,6 +68,15 @@ def patch_livro(id: int, session: T_Session, current_user: T_CurrentUser, livro:
                     status_code=HTTPStatus.CONFLICT, detail='Livro á consta no MADR'
                 )
             setattr(db_livro, key, value_sanitized)
+        elif key == 'romancista_id':
+            db_romancista = session.scalar(
+                select(Romancista).where(Romancista.id == livro.romancista_id)
+            )
+            if not db_romancista:
+                raise HTTPException(
+                    status_code=HTTPStatus.NOT_FOUND, detail='Romancista não consta no MADR'
+                )
+            setattr(db_livro, key, value)
         else:
             setattr(db_livro, key, value)
 
