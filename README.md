@@ -2,12 +2,6 @@
 
 Este projeto foi desenvolvido como projeto final do curso "FastAPI do Zero", criado pelo Dunossauro. O objetivo é construir uma aplicação completa utilizando o framework FastAPI, explorando desde conceitos básicos até a criação de um sistema funcional e eficiente.
 
-## Objetivos do Projeto:
-
-- **Aprendizado do FastAPI:** Compreender os fundamentos do FastAPI e como utilizá-lo para criar APIs rápidas e seguras.
-- **Desenvolvimento de uma aplicação completa:** Implementar uma aplicação web do zero, abordando temas como rotas, dependências, autenticação, e integração com banco de dados.
-- **Boas práticas de desenvolvimento:** Aplicar conceitos de boas práticas como organização de código, modularização, e testes automáticos.
-
 ## Funcionalidades:
 
 - **CRUD completo:** Implementação de operações de criação, leitura, atualização e deleção para diferentes recursos da aplicação.
@@ -18,7 +12,7 @@ Este projeto foi desenvolvido como projeto final do curso "FastAPI do Zero", cri
 
 ## Tecnologias Utilizadas:
 
-- **Python 3.8+**
+- **Python 3.12+**
 - **FastAPI**
 - **SQLAlchemy**
 - **Alembic**
@@ -26,8 +20,6 @@ Este projeto foi desenvolvido como projeto final do curso "FastAPI do Zero", cri
 - **Uvicorn**
 - **Docker**
 - **Poetry**
-- **Taskipy**
-- **Ruff**
 
 ## Como Executar o Projeto:
 
