@@ -49,3 +49,11 @@ class RomancistaSchema(BaseModel):
 
 class RomancistaPublic(RomancistaSchema):
     id: int
+
+
+class RomancistaUpdate(BaseModel):
+    nome: str | None = None
+
+
+class RomancistaList(BaseModel):
+    romancistas: list[RomancistaPublic]
