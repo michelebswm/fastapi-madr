@@ -1,6 +1,6 @@
 # Projeto MADR - Meu Acervo Digital de Romances
 
-Este projeto foi desenvolvido com base no curso "FastAPI do Zero", criado pelo Dunossauro. O objetivo é construir uma aplicação completa utilizando o framework FastAPI, explorando desde conceitos básicos até a criação de um sistema funcional e eficiente.
+Este projeto foi desenvolvido como projeto final do curso "FastAPI do Zero", criado pelo Dunossauro. O objetivo é construir uma aplicação completa utilizando o framework FastAPI, explorando desde conceitos básicos até a criação de um sistema funcional e eficiente.
 
 ## Objetivos do Projeto:
 
